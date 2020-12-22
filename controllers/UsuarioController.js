@@ -31,9 +31,11 @@ exports.login = async (req, res, next) => {
     }
 };
 
-exports.register = async (req, res) => {
+exports.register = async (req, res,next) => {
     try {
+        console.log("datos usuario a crear ", req.body);
         req.body.password = bcrypt.hashSync(req.body.password, 10);
+        console.log("datos usuario a crear ", req.body);
         const users = await models.Usuario.create(req.body);
         res.status(200).json(users);
     }
@@ -43,7 +45,7 @@ exports.register = async (req, res) => {
     }
 }
 
-exports.list = async (req, res) => {
+exports.list = async (req, res,next) => {
     try {
         const users = await models.Usuario.findAll();
         res.status(200).json(users);
@@ -57,12 +59,16 @@ exports.list = async (req, res) => {
 exports.update = async (req, res, next) => {
     try {
         //console.log(req.body)
-        const user = await models.Usuario.findOne({ where: { email: req.body.email } });
+        const user = await models.Usuario.findOne({ where: { id: req.body.id }});
         if (user) {
-            const user = await models.Usuario.update({ nombre: req.body.nombre },
+            const user = await models.Usuario.update({ 
+                nombre: req.body.nombre,
+                rol: req.body.rol,
+                email: req.body.email
+             },
                 {
                     where: {
-                        email: req.body.email
+                        id: req.body.id
                     },
                 });
             res.status(200).json(user);
@@ -71,6 +77,47 @@ exports.update = async (req, res, next) => {
                 message: 'usuario no encontrado'
             })
         }
+    } catch (error) {
+        res.status(500).send({
+            message: 'Error'
+        });
+        next(error);
+    }
+};
+
+exports.activate = async (req, res, next) => {
+    try {
+        const user = await models.Usuario.update(
+            { estado: 1 },
+            {
+                where: {
+                    id: req.body.id
+                },
+            });
+        res.status(200).send({
+            message: 'Realizado'
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: 'Error'
+        });
+        next(error);
+    }
+};
+
+
+exports.deactivate = async (req, res, next) => {
+    try {
+        const user = await models.Usuario.update(
+            { estado: 0 },
+            {
+                where: {
+                    id: req.body.id
+                },
+            });
+        res.status(200).send({
+            message: 'Realizado'
+        });
     } catch (error) {
         res.status(500).send({
             message: 'Error'

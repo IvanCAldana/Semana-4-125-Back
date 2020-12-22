@@ -54,7 +54,7 @@ exports.activate = async (req, res, next) => {
             { estado: 1 },
             {
                 where: {
-                    id: req.body.id
+                    id: req.body.id,
                 },
             });
         res.status(200).send({
@@ -76,7 +76,7 @@ exports.deactivate = async (req, res, next) => {
             { estado: 0 },
             {
                 where: {
-                    id: req.body.id
+                    id: req.body.id,
                 },
             });
         res.status(200).send({

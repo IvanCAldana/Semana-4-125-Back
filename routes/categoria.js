@@ -10,16 +10,17 @@ const router = routerx();
 router.get('/list' , categoriaController.list);
 
 //.com/api/auth/add
-router.post('/add' , auth.verifyUsuario, categoriaController.add);
+router.post('/add' ,  categoriaController.add);
 
 //.com/api/auth/activate
-router.put('/activate', auth.verifyUsuario, categoriaController.activate);
+router.put('/activate',  categoriaController.activate);
 
 //.com/api/auth/deactivate
-router.put('/deactivate', auth.verifyUsuario, categoriaController.deactivate);
+router.put('/deactivate', categoriaController.deactivate);
 
 //.com/api/auth/update/
-router.put('/update',auth.verifyUsuario, categoriaController.update);
+router.put('/update', categoriaController.update);
 
+// auth.verifyUsuario
 
 module.exports = router;

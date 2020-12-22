@@ -2,7 +2,17 @@ const models = require('../models');
 
 exports.list = async (req, res, next) => {
     try {
-        const articulo = await models.Articulo.findAll();
+        const articulo = await models.Articulo.findAll({
+            include:[
+                {
+                    model: models.Categoria,
+                    as: 'categoria',
+                    attributes:["id","nombre"]
+                }    
+            ],
+        }
+                
+        );
         res.status(200).json(articulo);
     }
     catch (e) {
@@ -34,7 +44,8 @@ exports.update = async (req, res, next) => {
             {
                 nombre: req.body.nombre,
                 descripcion: req.body.descripcion,
-                codigo: req.body.codigo
+                codigo: req.body.codigo,
+                categoriaId: req.body.categoriaId
             }, {
             where: {
                 id: req.body.id
